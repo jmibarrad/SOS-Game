@@ -1,23 +1,24 @@
 //
    Created by Light on 01-Dec-15.
-
 doctype html
 html
-   script(src='http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js')
-   body(ng-app='SoSApp')
-      div(ng-controller='MainController')
-         p
-            | Size:
-            input(type='text', ng-model='tamano')
-         input(type='button', ng-click='iniciar()', value='Iniciar')
-         // <p ng-repeat="item in board">{{item}}</p>
-         table
-            tr(ng-repeat='item in board')
-               td(ng-repeat='valor in item')
-                  input(type='button', value='{{valor.valor}}', id='{{valor.id}}', ng-click="marcar('{{valor.id}}')")
-         div
-            select
-               option S
-               option O
-            input(type='button', ng-click='reiniciar()', value='Enviar')
-      script(type='text/javascript', src='MainController.js')
+    head
+        script(src='./javascripts/angular.min.js')
+        link(type='text/css', rel='stylesheet', href='style.css')
+    body(ng-app='SoSApp')
+        div(ng-controller='MainController')
+            p
+                | Size:
+                input(type='text', ng-model='tamano')
+            input(type='button', ng-click='iniciar()', value='Iniciar')
+            // <p ng-repeat="item in board">{{item}}</p>
+            table.gameBoard
+                tr(ng-repeat='item in board')
+                    td(ng-repeat='valor in item')
+                        input(type='button', value='{{valor.valor}}', id='{{valor.id}}', ng-click='marcar($event)')
+            p Jugador: {{player}}
+            div
+                select(ng-model='select')
+                    option(value='S') S
+                    option(value='O') O
+        script(type='text/javascript', src='MainController.js')
