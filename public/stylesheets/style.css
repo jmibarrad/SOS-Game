@@ -70,16 +70,44 @@ h1 button#btn_reset:hover {
   border-bottom:1px solid #dbdbdb;
   border-top: 1px solid #dbdbdb;
   font-family: 'Arial', sans-serif;
-  font-size: 2em;
-  text-align: center;
   color: #262934;
-
 }
 
 /*.jugador div select{
 	font-family: 'Arial', sans-serif;
 	font-size: 13px;
 }*/
+.startGame{
+  display: inline;
+  font-size: 2em;
+}
+
+.startGame li{
+  display: inline;
+}
+
+.startGame li select{
+  padding-right: 30px;
+  padding-left: 30px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.startbutton {
+  background-color: #1abc9c;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+
+}
+
+.button:hover {
+  background-color: #16a085;
+}
 
 .board{
   padding-right: 15px;
@@ -128,8 +156,7 @@ h1 button#btn_reset:hover {
 .container {
   padding-right: 15px;
   padding-left: 15px;
-  padding-top: 5%;
-  margin-top: auto;
+  margin-top: 20px;
   margin-right: auto;
   margin-left: auto;
 }

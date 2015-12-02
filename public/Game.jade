@@ -14,29 +14,34 @@ html
             h1
                 .new
                     | Turn:
-                    span.chance Jugador # {{current_player}}
+                    span.chance Player # {{current_player}}
                 .new_2
                     | # Score #
                     br
                     span.score
-                        small jugador 1-
+                        small player 1 -
                         | {{score1}} /
-                        small jugador 2-
+                        small player 2 -
                         | {{score2}}
                     br
                     button#btn_reset(ng-click='start_game()') BEGIN
                 | SOS
-            p
-                | Size:
-                input(type='text', ng-model='matrix_size')
-            input(type='button', ng-click='start_game()', value='Iniciar')
-            // <p ng-repeat="item in board">{{item}}</p>
+            .container
+                div
+                    .startGame
+                        ul
+                            li
+                                | Size:
+                                input(type='text', ng-model='matrix_size')
+                            li
+                                |                               Choose Letter:
+                                select(ng-model='selected_value')
+                                    option(value='S' selected="selected") S
+                                    option(value='O') O
+
             table.board
                 tr(ng-repeat='item in board')
                     td(ng-repeat='valor in item')
                         input(type='button', class = '{{valor.class}}' value='{{valor.valor}}', id='{{valor.id}}', ng-click='marcar($event)')
-            div
-                select(ng-model='selected_value')
-                    option(value='S' selected="selected") S
-                    option(value='O') O
+
         script(type='text/javascript', src='MainController.js')

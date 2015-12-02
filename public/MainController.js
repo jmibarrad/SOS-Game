@@ -8,6 +8,7 @@ app.controller('MainController', function($scope){
     $scope.score2 = 0;
     var total_cells = 0;
     var cell_info;
+    var columns = [], rows = [];
 
     function table_cell(valor, id)
     {
@@ -45,12 +46,20 @@ app.controller('MainController', function($scope){
         return current_player == 1 ? 2 : 1;
     }
 
-    function addScore(){
+    function addScore(f, c){
 
         if($scope.current_player == 1)
             $scope.score2++;
         else
             $scope.score1++;
+
+        rows.push(f); columns.push(c);
+
+        for(var i = 0; i < rows.length; i++)
+            $scope.board[rows[i]][columns[i]].class = 'player1';
+
+        rows = [];
+        columns = [];
     }
 
     $scope.marcar = function(event){
@@ -94,81 +103,79 @@ app.controller('MainController', function($scope){
             return $scope.board[f][c].valor === 'O';
     }
 
-    var columns = [], rows = [];
-
     function solve(f, c, valor){
         if(valor === 'O'){
             if(contains_S(f - 1, c) && contains_S(f + 1, c)){
                 rows.push(f - 1); rows.push(f + 1);
                 columns.push(c);  columns.push(c);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_S(f - 1, c - 1) && contains_S(f + 1, c + 1)){
                 rows.push(f - 1); rows.push(f + 1);
                 columns.push(c - 1);  columns.push(c +1);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_S(f - 1, c + 1) && contains_S(f + 1, c -1)){
                 rows.push(f - 1); rows.push(f + 1);
                 columns.push(c + 1);  columns.push(c - 1);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_S(f , c - 1) && contains_S(f, c + 1)){
                 rows.push(f); rows.push(f);
                 columns.push(c - 1);  columns.push(c + 1);
-                addScore();
+                addScore(f,c);
             }
 
         }else if(valor === 'S'){
             if(contains_O(f - 1, c) && contains_S(f - 2, c)){
                 rows.push(f - 1); rows.push(f - 2);
                 columns.push(c);  columns.push(c);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_O(f + 1, c) && contains_S(f + 2, c)){
                 rows.push(f + 1); rows.push(f + 2);
                 columns.push(c);  columns.push(c);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_O(f, c - 1) && contains_S(f, c - 2)){
                 rows.push(f); rows.push(f);
                 columns.push(c - 1);  columns.push(c -2);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_O(f, c + 1) && contains_S(f, c + 2)){
                 rows.push(f); rows.push(f);
                 columns.push(c + 1);  columns.push(c + 2);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_O(f - 1, c - 1) && contains_S(f - 2, c - 2)){
                 rows.push(f - 1); rows.push(f - 2);
                 columns.push(c - 1);  columns.push(c -2);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_O(f + 1, c + 1) && contains_S(f + 2, c + 2)){
                 rows.push(f + 1); rows.push(f + 2);
                 columns.push(c + 1);  columns.push(c + 2);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_O(f + 1, c - 1) && contains_S(f + 2, c - 2)){
                 rows.push(f + 1); rows.push(f + 2);
                 columns.push(c - 1);  columns.push(c - 2);
-                addScore();
+                addScore(f,c);
             }
 
             if(contains_O(f - 1, c + 1) && contains_S(f - 2, c + 2)){
                 rows.push(f - 1); rows.push(f - 2);
                 columns.push(c + 1);  columns.push(c + 2);
-                addScore();
+                addScore(f,c);
             }
         }
     }
