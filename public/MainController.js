@@ -1,34 +1,33 @@
 var app = angular.module('SoSApp', []);
 app.controller('MainController', function($scope){
-    $scope.tamano;
-    $scope.player = 1;
+    $scope.matrix_size;
+    $scope.current_player = 1;
     $scope.board=[];
-    $scope.select;
+    $scope.selected_value;
     $scope.score1 = 0;
     $scope.score2 = 0;
 
-    var idMarcar;
+    var cell_info;
 
     function celda(valor, id)
     {
         this.valor = valor;
         this.id = id;
-        this.isMarked = 0;
     }
 
     function resetMatch(){
-        $scope.player = 1;
+        $scope.current_player = 1;
         $scope.board = [];
     }
 
-    $scope.iniciar = function(){
+    $scope.start_game = function(){
 
         resetMatch();
         var x, i;
-        if($scope.tamano > 2)
-            for(x=0; x < $scope.tamano; x++){
+        if($scope.matrix_size > 2)
+            for(x=0; x < $scope.matrix_size; x++){
                 var fila = [];
-                for(i=0; i < $scope.tamano; i++)
+                for(i=0; i < $scope.matrix_size; i++)
                 {
                     fila.push(new celda('_',(x+"-"+i)));
                 }
@@ -36,12 +35,13 @@ app.controller('MainController', function($scope){
             }
     };
 
-    function getTurn(player){
-        return player == 1 ? 2 : 1;
+    function getTurn(current_player){
+        return current_player == 1 ? 2 : 1;
     }
 
     function addScore(){
-        if($scope.player == 1)
+
+        if($scope.current_player == 1)
             $scope.score2++;
         else
             $scope.score1++;
@@ -49,14 +49,14 @@ app.controller('MainController', function($scope){
 
     $scope.marcar = function(event){
 
-        idMarcar = event.target.id.split('-');
-        var c = idMarcar.pop();
-        var f = idMarcar.pop();
+        cell_info = event.target.id.split('-');
+        var c = cell_info.pop();
+        var f = cell_info.pop();
 
         if($scope.board[f][c].valor === '_') {
-                $scope.board[f][c].valor = $scope.select;
-                $scope.player = getTurn($scope.player);
-                solve(parseInt(f), parseInt(c), $scope.select);
+                $scope.board[f][c].valor = $scope.selected_value;
+                $scope.current_player = getTurn($scope.current_player);
+                solve(parseInt(f), parseInt(c), $scope.selected_value);
 
         }
 
@@ -65,11 +65,7 @@ app.controller('MainController', function($scope){
     };
 
     function checkBounds(f, c){
-        return ((f < 0 || f > $scope.tamano) || (c < 0 || c > $scope.tamano)) ? 0 : 1;
-    }
-
-    function isCellMarked(f, c){
-        return !$scope.board[f][c].isMarked ? 1 : 0;
+        return ((f < 0 || f > $scope.matrix_size) || (c < 0 || c > $scope.matrix_size)) ? 0 : 1;
     }
 
     function contains_S(f, c){

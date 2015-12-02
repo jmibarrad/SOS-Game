@@ -9,16 +9,16 @@ html
         div(ng-controller='MainController')
             p
                 | Size:
-                input(type='text', ng-model='tamano')
-            input(type='button', ng-click='iniciar()', value='Iniciar')
+                input(type='text', ng-model='matrix_size')
+            input(type='button', ng-click='start_game()', value='Iniciar')
             // <p ng-repeat="item in board">{{item}}</p>
             table.gameBoard
                 tr(ng-repeat='item in board')
                     td(ng-repeat='valor in item')
                         input(type='button', value='{{valor.valor}}', id='{{valor.id}}', ng-click='marcar($event)')
-            p Jugador: {{player}}
+            p Jugador: {{current_player}}
             div
-                select(ng-model='select')
-                    option(value='S') S
+                select(ng-model='selected_value')
+                    option(value='S' selected="selected") S
                     option(value='O') O
         script(type='text/javascript', src='MainController.js')
