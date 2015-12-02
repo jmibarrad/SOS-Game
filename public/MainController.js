@@ -4,6 +4,8 @@ app.controller('MainController', function($scope){
     $scope.player = 1;
     $scope.board=[];
     $scope.select;
+    $scope.score1 = 0;
+    $scope.score2 = 0;
 
     var idMarcar;
 
@@ -34,8 +36,15 @@ app.controller('MainController', function($scope){
             }
     };
 
-    function getTurno(player){
+    function getTurn(player){
         return player == 1 ? 2 : 1;
+    }
+
+    function addScore(){
+        if($scope.player == 1)
+            $scope.score2++;
+        else
+            $scope.score1++;
     }
 
     $scope.marcar = function(event){
@@ -46,52 +55,107 @@ app.controller('MainController', function($scope){
 
         if($scope.board[f][c].valor === '_') {
                 $scope.board[f][c].valor = $scope.select;
-                $scope.player = getTurno($scope.player);
+                $scope.player = getTurn($scope.player);
+                solve(parseInt(f), parseInt(c), $scope.select);
+
         }
+
+        console.log('score1: '+$scope.score1);
+        console.log('score2: '+$scope.score2);
     };
 
     function checkBounds(f, c){
         return (f < 0 || f > $scope.tamano || c < 0 || c > $scope.tamano) ? 0 : 1;
     }
 
+    function isCellMarked(f, c){
+        return !$scope.board[f][c].isMarked ? 1 : 0;
+    }
+
     function contains_S(f, c){
-        return $scope.board[f][c].valor === 'S' && !$scope.board[f][c].isMarked ? 1 : 0;
+        return $scope.board[f][c].valor === 'S';
     }
 
     function contains_O(f, c){
-        return $scope.board[f][c].valor === 'O' && !$scope.board[f][c].isMarked ? 1 : 0;
+        return $scope.board[f][c].valor === 'O';
     }
+
+    var columns = [], rows = [];
 
     function solve(f, c, valor){
         if(valor === 'O'){
-            if(contains_S(f - 1, c) && contains_S(f + 1, c))
+            if(contains_S(f - 1, c) && contains_S(f + 1, c) && (isCellMarked(f - 1, c) || isCellMarked(f + 1, c)) ){
+                rows.push(f - 1); rows.push(f + 1);
+                columns.push(c);  columns.push(c);
+                addScore();
+            }
 
-            if(contains_S(f - 1, c - 1) && contains_S(f + 1, c + 1))
+            if(contains_S(f - 1, c - 1) && contains_S(f + 1, c + 1) && (isCellMarked(f - 1, c - 1) || isCellMarked(f + 1, c + 1)) ){
+                rows.push(f - 1); rows.push(f + 1);
+                columns.push(c - 1);  columns.push(c +1);
+                addScore();
+            }
 
-            if(contains_S(f - 1, c +1) && contains_S(f + 1, c -1))
+            if(contains_S(f - 1, c + 1) && contains_S(f + 1, c -1) && (isCellMarked(f - 1, c + 1) || isCellMarked(f + 1, c - 1))){
+                rows.push(f - 1); rows.push(f + 1);
+                columns.push(c + 1);  columns.push(c - 1);
+                addScore();
+            }
 
-            if(contains_S(f , c - 1) && contains_S(f, c + 1))
-                return 0;
+            if(contains_S(f , c - 1) && contains_S(f, c + 1) && (isCellMarked(f, c - 1) || isCellMarked(f, c + 1)) ){
+                rows.push(f); rows.push(f);
+                columns.push(c - 1);  columns.push(c + 1);
+                addScore();
+            }
 
-        }else{
-            if(contains_O(f - 1, c) && contains_S(f - 2, c))
+        }else if(valor === 'S'){
+            if(contains_O(f - 1, c) && contains_S(f - 2, c) && (isCellMarked(f - 1, c) || isCellMarked(f - 2, c)) ){
+                rows.push(f - 1); rows.push(f - 2);
+                columns.push(c);  columns.push(c);
+                addScore();
+            }
 
-            if(contains_O(f + 1, c) && contains_S(f + 2, c))
+            if(contains_O(f + 1, c) && contains_S(f + 2, c) && (isCellMarked(f + 1, c) || isCellMarked(f + 2, c))){
+                rows.push(f + 1); rows.push(f + 2);
+                columns.push(c);  columns.push(c);
+                addScore();
+            }
 
-            if(contains_O(f, c - 1) && contains_S(f, c - 2))
+            if(contains_O(f, c - 1) && contains_S(f, c - 2) && (isCellMarked(f, c - 1) || isCellMarked(f, c - 2)) ){
+                rows.push(f); rows.push(f);
+                columns.push(c - 1);  columns.push(c -2);
+                addScore();
+            }
 
-            if(contains_O(f, c + 1) && contains_S(f, c + 2))
+            if(contains_O(f, c + 1) && contains_S(f, c + 2) && (isCellMarked(f, c + 1) || isCellMarked(f, c + 2)) ){
+                rows.push(f); rows.push(f);
+                columns.push(c + 1);  columns.push(c + 2);
+                addScore();
+            }
 
-            if(contains_O(f - 1, c - 1) && contains_S(f - 2, c - 2))
+            if(contains_O(f - 1, c - 1) && contains_S(f - 2, c - 2) && (isCellMarked(f - 1, c - 1) || isCellMarked(f - 2, c - 2)) ){
+                rows.push(f - 1); rows.push(f - 2);
+                columns.push(c - 1);  columns.push(c -2);
+                addScore();
+            }
 
-            if(contains_O(f + 1, c + 1) && contains_S(f + 2, c + 2))
+            if(contains_O(f + 1, c + 1) && contains_S(f + 2, c + 2) && (isCellMarked(f + 1, c + 1) || isCellMarked(f + 2, c + 2)) ){
+                rows.push(f + 1); rows.push(f + 2);
+                columns.push(c + 1);  columns.push(c + 2);
+                addScore();
+            }
 
-            if(contains_O(f + 1, c - 1) && contains_S(f + 2, c - 2))
+            if(contains_O(f + 1, c - 1) && contains_S(f + 2, c - 2) && (isCellMarked(f + 1, c - 1) || isCellMarked(f + 2, c - 2)) ){
+                rows.push(f + 1); rows.push(f + 2);
+                columns.push(c - 1);  columns.push(c - 2);
+                addScore();
+            }
 
-            if(contains_O(f - 1, c + 1) && contains_S(f - 2, c + 2))
-
-                return 0;
-
+            if(contains_O(f - 1, c + 1) && contains_S(f - 2, c + 2) && (isCellMarked(f - 1, c + 1) || isCellMarked(f - 2, c + 2)) ){
+                rows.push(f - 1); rows.push(f - 2);
+                columns.push(c + 1);  columns.push(c + 2);
+                addScore();
+            }
         }
     }
 
