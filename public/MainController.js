@@ -6,13 +6,14 @@ app.controller('MainController', function($scope){
     $scope.selected_value;
     $scope.score1 = 0;
     $scope.score2 = 0;
-
+    var total_cells = 0;
     var cell_info;
 
-    function celda(valor, id)
+    function table_cell(valor, id)
     {
         this.valor = valor;
         this.id = id;
+        this.class = 'default';
     }
 
     function resetMatch(){
@@ -20,19 +21,24 @@ app.controller('MainController', function($scope){
         $scope.board = [];
     }
 
-    $scope.start_game = function(){
-
+    $scope.start_game = function() {
         resetMatch();
         var x, i;
-        if($scope.matrix_size > 2)
-            for(x=0; x < $scope.matrix_size; x++){
+        if ($scope.matrix_size > 2){
+            for (x = 0; x < $scope.matrix_size; x++) {
                 var fila = [];
-                for(i=0; i < $scope.matrix_size; i++)
-                {
-                    fila.push(new celda('_',(x+"-"+i)));
+                for (i = 0; i < $scope.matrix_size; i++) {
+                    fila.push(new table_cell('_', (x + "-" + i)));
                 }
                 $scope.board.push(fila);
             }
+        }else {
+            alertify
+                .alert("Size must be greater than 2..!", function(){
+                    alertify.error('Error message');
+                });
+
+        }
     };
 
     function getTurn(current_player){
@@ -57,15 +63,25 @@ app.controller('MainController', function($scope){
                 $scope.board[f][c].valor = $scope.selected_value;
                 $scope.current_player = getTurn($scope.current_player);
                 solve(parseInt(f), parseInt(c), $scope.selected_value);
-
+                total_cells++;
         }
 
-        console.log('score1: '+$scope.score1);
-        console.log('score2: '+$scope.score2);
+        if(total_cells == (parseInt($scope.matrix_size)*parseInt($scope.matrix_size))){
+            var winner;
+            if($scope.score1 > $scope.score2)
+                winner = 1;
+            else if($scope.score1 < $scope.score2)
+                winner = 2;
+
+            alertify
+                .alert("Congrats player: " + winner + " you have won!", function(){
+                    alertify.message('OK');
+                });
+        }
     };
 
     function checkBounds(f, c){
-        return ((f < 0 || f > $scope.matrix_size) || (c < 0 || c > $scope.matrix_size)) ? 0 : 1;
+        return ((f < 0 || f >= $scope.matrix_size) || (c < 0 || c >= $scope.matrix_size)) ? 0 : 1;
     }
 
     function contains_S(f, c){

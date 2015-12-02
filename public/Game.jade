@@ -3,20 +3,38 @@
 doctype html
 html
     head
-        script(src='./javascripts/angular.min.js')
-        link(type='text/css', rel='stylesheet', href='style.css')
+        script(src='javascripts/angular.min.js')
+        link(type='text/css', rel='stylesheet', href='stylesheets/style.css')
+        link(rel='stylesheet', href='stylesheets/alertify.css')
+        link(rel='stylesheet', href='stylesheets/semantic.css')
+        script(src='javascripts/alertify.min.js')
+
     body(ng-app='SoSApp')
         div(ng-controller='MainController')
+            h1
+                .new
+                    | Turn:
+                    span.chance Jugador # {{current_player}}
+                .new_2
+                    | # Score #
+                    br
+                    span.score
+                        small jugador 1-
+                        | {{score1}} /
+                        small jugador 2-
+                        | {{score2}}
+                    br
+                    button#btn_reset(ng-click='start_game()') BEGIN
+                | SOS
             p
                 | Size:
                 input(type='text', ng-model='matrix_size')
             input(type='button', ng-click='start_game()', value='Iniciar')
             // <p ng-repeat="item in board">{{item}}</p>
-            table.gameBoard
+            table.board
                 tr(ng-repeat='item in board')
                     td(ng-repeat='valor in item')
-                        input(type='button', value='{{valor.valor}}', id='{{valor.id}}', ng-click='marcar($event)')
-            p Jugador: {{current_player}}
+                        input(type='button', class = '{{valor.class}}' value='{{valor.valor}}', id='{{valor.id}}', ng-click='marcar($event)')
             div
                 select(ng-model='selected_value')
                     option(value='S' selected="selected") S
