@@ -1,56 +1,183 @@
 var app = angular.module('SoSApp', []);
-app.controller('MainController',function($scope){
-    $scope.tamano;
-    $scope.player = 1;
+app.controller('MainController', function($scope){
+    $scope.matrix_size;
+    $scope.current_player = 1;
     $scope.board=[];
-    $scope.select;
+    $scope.selected_value;
+    $scope.score1 = 0;
+    $scope.score2 = 0;
+    var total_cells = 0;
+    var cell_info;
+    var columns = [], rows = [];
 
-    var idMarcar;
-
-    function celda(valor, id)
+    function table_cell(valor, id)
     {
         this.valor = valor;
         this.id = id;
-    }
-
-    function fila(fila){
-        this.fila=fila;
+        this.class = 'default';
     }
 
     function resetMatch(){
-        $scope.player = 1;
+        $scope.current_player = 1;
         $scope.board = [];
     }
 
-    $scope.iniciar = function(){
-
+    $scope.start_game = function() {
         resetMatch();
         var x, i;
-        if($scope.tamano > 2)
-            for(x=0; x<$scope.tamano; x++){
+        if ($scope.matrix_size > 2){
+            for (x = 0; x < $scope.matrix_size; x++) {
                 var fila = [];
-                for(i=0; i<$scope.tamano; i++)
-                {
-                    fila.push(new celda('_',(x+"-"+i)));
+                for (i = 0; i < $scope.matrix_size; i++) {
+                    fila.push(new table_cell('_', (x + "-" + i)));
                 }
                 $scope.board.push(fila);
             }
+        }else {
+            alertify
+                .alert("Size must be greater than 2..!", function(){
+                    alertify.error('Error message');
+                });
+
+        }
     };
 
-    function getTurno(player){
-        return player == 1 ? 2 : 1;
+    function getTurn(current_player){
+        return current_player == 1 ? 2 : 1;
+    }
+
+    function addScore(f, c){
+
+        if($scope.current_player == 1)
+            $scope.score2++;
+        else
+            $scope.score1++;
+
+        rows.push(f); columns.push(c);
+
+        for(var i = 0; i < rows.length; i++)
+            $scope.board[rows[i]][columns[i]].class = 'player1';
+
+        rows = [];
+        columns = [];
     }
 
     $scope.marcar = function(event){
 
-        idMarcar = event.target.id.split('-');
-        var c = idMarcar.pop();
-        var f = idMarcar.pop();
-        
+        cell_info = event.target.id.split('-');
+        var c = cell_info.pop();
+        var f = cell_info.pop();
+
         if($scope.board[f][c].valor === '_') {
-                $scope.board[f][c].valor = $scope.select;
-                $scope.player = getTurno($scope.player);
+                $scope.board[f][c].valor = $scope.selected_value;
+                $scope.current_player = getTurn($scope.current_player);
+                solve(parseInt(f), parseInt(c), $scope.selected_value);
+                total_cells++;
+        }
+
+        if(total_cells == (parseInt($scope.matrix_size)*parseInt($scope.matrix_size))){
+            var winner;
+            if($scope.score1 > $scope.score2)
+                winner = 1;
+            else if($scope.score1 < $scope.score2)
+                winner = 2;
+
+            alertify
+                .alert("Congrats player: " + winner + " you have won!", function(){
+                    alertify.message('OK');
+                });
+        }
+    };
+
+    function checkBounds(f, c){
+        return ((f < 0 || f >= $scope.matrix_size) || (c < 0 || c >= $scope.matrix_size)) ? 0 : 1;
+    }
+
+    function contains_S(f, c){
+        if(checkBounds(f,c))
+            return $scope.board[f][c].valor === 'S';
+    }
+
+    function contains_O(f, c){
+        if(checkBounds(f,c))
+            return $scope.board[f][c].valor === 'O';
+    }
+
+    function solve(f, c, valor){
+        if(valor === 'O'){
+            if(contains_S(f - 1, c) && contains_S(f + 1, c)){
+                rows.push(f - 1); rows.push(f + 1);
+                columns.push(c);  columns.push(c);
+                addScore(f,c);
             }
 
-    };
+            if(contains_S(f - 1, c - 1) && contains_S(f + 1, c + 1)){
+                rows.push(f - 1); rows.push(f + 1);
+                columns.push(c - 1);  columns.push(c +1);
+                addScore(f,c);
+            }
+
+            if(contains_S(f - 1, c + 1) && contains_S(f + 1, c -1)){
+                rows.push(f - 1); rows.push(f + 1);
+                columns.push(c + 1);  columns.push(c - 1);
+                addScore(f,c);
+            }
+
+            if(contains_S(f , c - 1) && contains_S(f, c + 1)){
+                rows.push(f); rows.push(f);
+                columns.push(c - 1);  columns.push(c + 1);
+                addScore(f,c);
+            }
+
+        }else if(valor === 'S'){
+            if(contains_O(f - 1, c) && contains_S(f - 2, c)){
+                rows.push(f - 1); rows.push(f - 2);
+                columns.push(c);  columns.push(c);
+                addScore(f,c);
+            }
+
+            if(contains_O(f + 1, c) && contains_S(f + 2, c)){
+                rows.push(f + 1); rows.push(f + 2);
+                columns.push(c);  columns.push(c);
+                addScore(f,c);
+            }
+
+            if(contains_O(f, c - 1) && contains_S(f, c - 2)){
+                rows.push(f); rows.push(f);
+                columns.push(c - 1);  columns.push(c -2);
+                addScore(f,c);
+            }
+
+            if(contains_O(f, c + 1) && contains_S(f, c + 2)){
+                rows.push(f); rows.push(f);
+                columns.push(c + 1);  columns.push(c + 2);
+                addScore(f,c);
+            }
+
+            if(contains_O(f - 1, c - 1) && contains_S(f - 2, c - 2)){
+                rows.push(f - 1); rows.push(f - 2);
+                columns.push(c - 1);  columns.push(c -2);
+                addScore(f,c);
+            }
+
+            if(contains_O(f + 1, c + 1) && contains_S(f + 2, c + 2)){
+                rows.push(f + 1); rows.push(f + 2);
+                columns.push(c + 1);  columns.push(c + 2);
+                addScore(f,c);
+            }
+
+            if(contains_O(f + 1, c - 1) && contains_S(f + 2, c - 2)){
+                rows.push(f + 1); rows.push(f + 2);
+                columns.push(c - 1);  columns.push(c - 2);
+                addScore(f,c);
+            }
+
+            if(contains_O(f - 1, c + 1) && contains_S(f - 2, c + 2)){
+                rows.push(f - 1); rows.push(f - 2);
+                columns.push(c + 1);  columns.push(c + 2);
+                addScore(f,c);
+            }
+        }
+    }
+
 });

@@ -3,22 +3,45 @@
 doctype html
 html
     head
-        script(src='./javascripts/angular.min.js')
-        link(type='text/css', rel='stylesheet', href='style.css')
+        script(src='javascripts/angular.min.js')
+        link(type='text/css', rel='stylesheet', href='stylesheets/style.css')
+        link(rel='stylesheet', href='stylesheets/alertify.css')
+        link(rel='stylesheet', href='stylesheets/semantic.css')
+        script(src='javascripts/alertify.min.js')
+
     body(ng-app='SoSApp')
         div(ng-controller='MainController')
-            p
-                | Size:
-                input(type='text', ng-model='tamano')
-            input(type='button', ng-click='iniciar()', value='Iniciar')
-            // <p ng-repeat="item in board">{{item}}</p>
-            table.gameBoard
+            h1
+                .new
+                    | Turn:
+                    span.chance Player # {{current_player}}
+                .new_2
+                    | # Score #
+                    br
+                    span.score
+                        small player 1 -
+                        | {{score1}} /
+                        small player 2 -
+                        | {{score2}}
+                    br
+                    button#btn_reset(ng-click='start_game()') BEGIN
+                | SOS
+            .container
+                div
+                    .startGame
+                        ul
+                            li
+                                | Size:
+                                input(type='text', ng-model='matrix_size')
+                            li
+                                |                               Choose Letter:
+                                select(ng-model='selected_value')
+                                    option(value='S' selected="selected") S
+                                    option(value='O') O
+
+            table.board
                 tr(ng-repeat='item in board')
                     td(ng-repeat='valor in item')
-                        input(type='button', value='{{valor.valor}}', id='{{valor.id}}', ng-click='marcar($event)')
-            p Jugador: {{player}}
-            div
-                select(ng-model='select')
-                    option(value='S') S
-                    option(value='O') O
+                        input(type='button', class = '{{valor.class}}' value='{{valor.valor}}', id='{{valor.id}}', ng-click='marcar($event)')
+
         script(type='text/javascript', src='MainController.js')

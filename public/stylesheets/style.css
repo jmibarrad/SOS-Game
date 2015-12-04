@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Lato);
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -5,4 +7,177 @@ body {
 
 a {
   color: #00B7FF;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#board {
+  display: block;
+  margin: 50px auto;
+}
+
+h1 {
+  text-align: center;
+  font-size: 35px;
+  font-family: "Lato", Helvetica, sans-serif;
+  color: #888;
+  border-bottom: 1px solid #888;
+  padding: 50px;
+  margin: 10px;
+}
+h1 .new {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
+h1 .new span.chance {
+  color: #F44336;
+}
+h1 .new_2 {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+h1 .new_2 span.score {
+  font-size: 20px;
+}
+h1 .new_2 span.score small {
+  color: #F44336;
+}
+h1 button#btn_reset {
+  border: 3px solid #F44336;
+  outline: none;
+  background-color: #F44336;
+  color: #fff;
+  font-weight: 900;
+  padding: 6px 15px;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+h1 button#btn_reset:hover {
+  background-color: transparent;
+  color: #F44336;
+}
+
+
+/*Main Board CSS*/
+.container div{
+  background-color:#efefef;
+  border-bottom:1px solid #dbdbdb;
+  border-top: 1px solid #dbdbdb;
+  font-family: 'Arial', sans-serif;
+  color: #262934;
+}
+
+/*.jugador div select{
+	font-family: 'Arial', sans-serif;
+	font-size: 13px;
+}*/
+.startGame{
+  display: inline;
+  font-size: 2em;
+}
+
+.startGame li{
+  display: inline;
+}
+
+.startGame li select{
+  padding-right: 30px;
+  padding-left: 30px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.startbutton {
+  background-color: #1abc9c;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+
+}
+
+.button:hover {
+  background-color: #16a085;
+}
+
+.board{
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.default{
+  height: 50px;
+  width: 50px;
+  background-color: #3498db;
+  color: #fff;
+  font-size: 40px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  border-radius: 30px;
+}
+
+.default:hover{
+  background-color: #34495e;
+}
+
+.player1{
+  background-color: #c0392b;
+  height: 50px;
+  width: 50px;
+  color: #fff;
+  font-size: 40px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  border-radius: 30px;
+}
+
+.player2{
+  background-color: #f1c40f;
+  height: 50px;
+  width: 50px;
+  color: #fff;
+  font-size: 40px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  border-radius: 30px;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
